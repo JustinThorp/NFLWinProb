@@ -12,6 +12,8 @@ from torch import nn
 from torch import optim
 from torch.utils.data import DataLoader,Dataset
 
+from model import Model
+
 #torch.set_num_threads(8)
 
 data = pl.scan_parquet('data/traing_data.parquet')
@@ -85,42 +87,9 @@ val_loader = DataLoader(val_dataset, batch_size=6400, shuffle=False)
 
 
 
-class Model(nn.Module):
-
-    def __init__(self):
-        super().__init__()
-        self.model = nn.Sequential(
-            nn.BatchNorm1d(8),
-            nn.Linear(8, 500),
-            nn.ReLU(),
-            #nn.Dropout(.5),
-            nn.Linear(500, 1000),
-            nn.ReLU(),
-            #nn.Dropout(.5),
-            nn.Linear(1000, 2500),
-            nn.ReLU(),
-            #nn.Dropout(.5),
-            nn.Linear(2500, 5000),
-            nn.ReLU(),
-            #nn.Dropout(.5),
-            nn.Linear(5000, 2500),
-            nn.ReLU(),
-            #nn.Dropout(.5),
-            nn.Linear(2500, 1000),
-            nn.ReLU(),
-            #nn.Dropout(.5),
-            nn.Linear(1000, 500),
-            nn.ReLU(),
-            #nn.Dropout(.5),
-            nn.Linear(500, 3)
-        )
-
-    def forward(self, x):
-        x = self.model(x)
-        return x[:, :2], x[:, 2:]
 
 net = Model().to(device)
-opt = optim.Adam(net.parameters(), lr=.0002)
+opt = optim.Adam(net.parameters(), lr=.02) #.0002
 loss_fn1 = nn.CrossEntropyLoss()
 loss_fn2 = nn.MSELoss()
 
