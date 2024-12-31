@@ -55,7 +55,7 @@ preds2 = net(X)[1]#.detach().numpy()
 fig,ax = plt.subplots(figsize = (9,6))
 plot_df = model_df.with_columns(
     pl.col('game_seconds_remaining').mul(-1),
-    pl.lit(F.softmax(preds,dim = 1)[:,1].detach().numpy()).alias('homewinprob'),
+    pl.lit(F.softmax(preds,dim = 1)[:,2].detach().numpy()).alias('homewinprob'),
     pl.lit(preds2[:,0].detach().numpy()).alias('homewinmargin')
 ).to_pandas()
 plot_df.plot(x='game_seconds_remaining',y = 'homewinprob',ax=ax,label = 'Home Team Win Prob')

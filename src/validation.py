@@ -48,7 +48,7 @@ preds2 = net(X)[1]#.detach().numpy()
 
 print(
 model_df.with_columns(
-    pl.lit(F.softmax(preds,dim = 1)[:,1].detach().numpy()).alias('homewinprob'),
+    pl.lit(F.softmax(preds,dim = 1)[:,2].detach().numpy()).alias('homewinprob'),
     pl.lit(preds2[:,0].detach().numpy()).alias('homewinmargin')
 ).group_by('qtr').agg(
     pl.map_groups(['home_win','homewinprob'],lambda x: roc_auc_score(x[0],x[1]))

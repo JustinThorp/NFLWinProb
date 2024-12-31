@@ -3,8 +3,7 @@ from datetime import datetime
 import polars as pl
 
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.metrics import roc_auc_score
+
 
 
 import torch
@@ -26,7 +25,7 @@ model_df = data.select([
     pl.col('qtr'),
     pl.col('game_seconds_remaining'),
     pl.col('result'),
-    pl.when(pl.col('result') > 0).then(1).otherwise(0).alias('home_win'),
+    pl.when(pl.col('result') > 0).then(2).when(pl.col('result') == 0).then(1).otherwise(0).alias('home_win'),
     pl.when(pl.col('posteam') == pl.col('home_team')).then(1).otherwise(0).alias('homepos'),
     pl.col('down'),
     pl.col('ydstogo'),
@@ -120,7 +119,7 @@ def train(dataloader, model, optimizer):
         loss1 = loss_fn1(pred1, y1)
         
         loss2 = loss_fn2(pred2.squeeze(), y2)
-        loss = .05*loss2 + loss1
+        loss = .1*loss2 + loss1
         loss.backward()
         # Backpropagation
         optimizer.step()

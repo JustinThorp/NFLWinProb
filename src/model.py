@@ -29,9 +29,9 @@ class Model(nn.Module):
             nn.Linear(10, 5),
             nn.ReLU(),
             #nn.Dropout(.5),
-            nn.Linear(5, 3)
+            nn.Linear(5, 4)
         )
 
     def forward(self, x):
         x = self.model(x)
-        return x[:, :2], x[:, 2:]
+        return x[:, :3], x[:, 3:]
